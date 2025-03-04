@@ -38,7 +38,7 @@ services:
   horizon:
     <<: *php
     container_name: ieducar-horizon
-    command: /var/www/ieducar/artisan horizon
+    command: php /var/www/ieducar/artisan horizon
     restart: always
 
   nginx:

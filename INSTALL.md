@@ -33,12 +33,6 @@ Para instalar o projeto execute **todos os passos** abaixo:
 > ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e
 desenvolvimento. Não é recomendado para ambientes de produção!
 
-Clone o repositório:
-
-```bash
-git clone git@github.com:portabilis/i-educar.git && cd i-educar
-```
-
 Faça o build das imagens Docker utilizadas no projeto e inicie os containers da aplicação (pode levar alguns minutos):
 
 ```bash

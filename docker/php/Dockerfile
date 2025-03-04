@@ -5,6 +5,8 @@ FROM composer:${COMPOSER_VERSION} AS composer
 FROM php:${PHP_VERSION}-fpm-alpine
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
@@ -36,17 +38,13 @@ RUN apk add --update \
 # https://github.com/docker-library/php/issues/436#issuecomment-303171390
 RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS
 
-RUN pecl install \
-    redis \
-    xdebug
+RUN pecl install redis \
+    && docker-php-ext-enable redis
 
-RUN docker-php-ext-enable \
-    redis \
-    xdebug
-
-RUN docker-php-ext-install  \
+RUN docker-php-ext-install \
     bcmath \
     gd \
+    opcache \
     pcntl \
     pdo \
     pdo_pgsql \
@@ -54,15 +52,20 @@ RUN docker-php-ext-install  \
     zip \
     ftp
 
-RUN docker-php-ext-enable  \
-     bcmath \
-     gd \
-     pcntl \
-     pdo \
-     pdo_pgsql \
-     pgsql \
-     zip \
-     ftp
+RUN docker-php-ext-enable \
+    bcmath \
+    gd \
+    opcache \
+    pcntl \
+    pdo \
+    pdo_pgsql \
+    pgsql \
+    zip \
+    ftp
+
+# Install and enable xdebug last to avoid conflicts
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 # https://github.com/docker-library/php/issues/436#issuecomment-303171390
 RUN apk del .phpize_deps
